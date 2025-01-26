@@ -63,7 +63,7 @@ const popolaMenuCategoria = (tipoSelezionato) => {
     }
 };
 
-// Inizializzazione dell'app
+// Inizializzazione dell'app (sperando che funzioni)
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         await initDB();
