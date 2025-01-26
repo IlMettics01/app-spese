@@ -1,6 +1,6 @@
 // sheets.js
-const SHEET_ID = '1fjNnBwsQ40PXANk3MYBiBXmaBZIgVehIcFJ2XT68eo8';
-const API_KEY = 'AIzaSyAow--PcNKFqEZma7YIkrBNMVucoRLNAN0';
+const SHEET_ID = config.SHEET_ID;
+const API_KEY = config.API_KEY;
 const RANGE = 'Transazioni!C11:G';
 
 async function appendToSheet(spesa) {
