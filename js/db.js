@@ -3,36 +3,38 @@ const dbVersion = 1;
 
 let db;
 
+// Modifica in db.js
 const initDB = () => {
     return new Promise((resolve, reject) => {
+        if (!window.indexedDB) {
+            reject(new Error('Il tuo browser non supporta IndexedDB'));
+            return;
+        }
+
         const request = indexedDB.open(dbName, dbVersion);
 
-        request.onerror = () => reject(request.error);
-        request.onsuccess = () => {
-            db = request.result;
+        request.onerror = (event) => {
+            console.error('Errore apertura DB:', event.target.error);
+            reject(event.target.error);
+        };
+
+        request.onsuccess = (event) => {
+            db = event.target.result;
+            console.log('Database inizializzato con successo');
             resolve(db);
         };
 
         request.onupgradeneeded = (event) => {
             const db = event.target.result;
-            const store = db.createObjectStore('spese', { 
-                keyPath: 'id', 
-                autoIncrement: true 
-            });
-            
-            store.createIndex('data', 'data');
-            store.createIndex('tipo', 'tipo');
+            if (!db.objectStoreNames.contains('spese')) {
+                const store = db.createObjectStore('spese', { 
+                    keyPath: 'id', 
+                    autoIncrement: true 
+                });
+                store.createIndex('data', 'data');
+                store.createIndex('tipo', 'tipo');
+                console.log('Store spese creato');
+            }
         };
-    });
-};
-
-const aggiungiSpesa = (spesa) => {
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction(['spese'], 'readwrite');
-        const store = transaction.objectStore('spese');
-        const request = store.add(spesa);
-
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
     });
 };
